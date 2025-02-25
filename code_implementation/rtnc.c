@@ -2,6 +2,24 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+//Macros defined to use colors in output [syntax example : printf(YELLOW "text" RESET);]
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /*Macro defined to use the color Black */
+#define RED     "\033[31m"      /*Macro defined to use the color Red */
+#define GREEN   "\033[32m"      /*Macro defined to use the color Green */
+#define YELLOW  "\033[33m"      /*Macro defined to use the color Yellow */
+#define BLUE    "\033[34m"      /*Macro defined to use the color Blue */
+#define MAGENTA "\033[35m"      /*Macro defined to use the color Magenta */
+#define CYAN    "\033[36m"      /*Macro defined to use the color Cyan */
+#define WHITE   "\033[37m"      /*Macro defined to use the color White */
+#define BOLDBLACK   "\033[1m\033[30m"      /*Macro defined to use the color "Bold" Black */
+#define BOLDRED     "\033[1m\033[31m"      /*Macro defined to use the color "Bold" Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /*Macro defined to use the color "Bold" Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /*Macro defined to use the color "Bold" Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /*Macro defined to use the color "Bold" Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /*Macro defined to use the color "Bold" Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /*Macro defined to use the color "Bold" Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /*Macro defined to use the color "Bold" White */
 
 typedef struct Node
 {
@@ -16,7 +34,7 @@ node * create_node (char data)
 
     if(newNode == NULL)
     {
-        printf("Stack Error : Memory allocation Failed");
+        printf(BOLDRED "Stack Error : Memory allocation Failed" RESET);
         exit(1);
     }
 
@@ -56,7 +74,7 @@ node * pop (node ** top)
 {
     if(isEmpty(*top) == 1)
     {
-        printf("Stack Error : Trying to pop Empty stack");
+        printf(BOLDRED "Stack Error : Trying to pop Empty stack" RESET);
         exit(1);
     } 
     else
@@ -106,13 +124,14 @@ void empty_paranthesis_check(char * regex)
         }
         if((prev_val == '(')&&(current_val == ')'))
         {
-            printf("\nInvalid Regex Error : Empty Parenthesis Encountered\n");
+            printf("\nValid Regex check1.2 : "BOLDRED"Failed\n" RESET);
+            printf(BOLDRED "\nInvalid Regex Error : Empty Parenthesis Encountered\n" RESET);
             exit(1);
         }
         prev_val = regex[i];
         i++;
     }
-    printf("\nValid Regex check1.2 : Passed\n");
+    printf("\nValid Regex check1.2 : "BOLDGREEN"Passed\n" RESET);
 }
 
 //function used to check if the parenthesis used for regex are valid or invalid
@@ -155,12 +174,13 @@ void paranthesis_check(char * regex)
     }
     if(isEmpty(top)==1)
     {
-        printf("Valid Regex check1.1 : Passed");
+        printf("Valid Regex check1.1 : "BOLDGREEN"Passed" RESET);
         empty_paranthesis_check(regex);
     }
     else
     {
-        printf("Invalid Regex Error: Check the Parenthesis\n");
+        printf("Valid Regex check1.1 : "BOLDRED"Failed\n" RESET);
+        printf(BOLDRED "\nInvalid Regex Error: Parenthesis are not properly placed\n" RESET);
         exit(1);
     }
     
@@ -201,12 +221,13 @@ void symbol_check(char * regex)
                 flag = false;
                 continue;
             }
-            printf("Invalid Regex Error: invalid Symbol Found in Regex");
-            printf("\nInvalid Regex symbol found : %c\n", regex[i]);
+            printf("Valid Regex check2 : "BOLDRED"Failed\n" RESET);
+            printf(BOLDRED "\nInvalid Regex Error: invalid Symbol Found in Regex" RESET);
+            printf( BOLDRED "\nInvalid Regex symbol found \"%c\"\n" RESET, regex[i]);
             exit(1);
         }
     }
-    printf("Valid Regex check2 : Passed");
+    printf("Valid Regex check2 : "BOLDGREEN"Passed" RESET);
 }
 
 //function used to check if there are any operators in regex which are side by side example : (a++b) or (a+*b)
@@ -236,14 +257,15 @@ void multi_operator_check(char * regex)
         }
         if(((prev_val == '+')||(prev_val == '.')||(prev_val == '*'))&&((current_val == '+')||(current_val == '.')||(current_val == '*')))
         {
-            printf("\nInvalid Regex Error : Operators encountered side by side");
-            printf("\nThe op1 is %c and the op2 is %c\n",prev_val,current_val);
+            printf("\nValid Regex check3 : "BOLDRED"Failed\n" RESET);
+            printf(BOLDRED "\nInvalid Regex Error : Operators encountered side by side" RESET);
+            printf( BOLDRED "\nThe op1 is \"%c\" and the op2 is \"%c\"\n" RESET ,prev_val,current_val);
             exit(1);
         }
         prev_val = regex[i];
         i++;
     }
-    printf("\nValid Regex check3 : Passed\n");
+    printf( "\nValid Regex check3 : "BOLDGREEN"Passed\n" RESET);
 }
 
 //function which will check the validity of the regex
