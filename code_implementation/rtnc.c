@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include<ctype.h>
 
 //Macros defined to use colors in output [syntax example : printf(YELLOW "text" RESET);]
 #define RESET   "\033[0m"
@@ -85,6 +86,29 @@ node * pop (node ** top)
 
         return *top;
     }
+}
+
+
+// Returns the data of top 
+char peek(node *top) {
+    if (!isEmpty(top))
+    {
+        return top->data;
+    }
+    return '\0';
+}
+
+// Returns the precedence of a charcter
+int precedence(char op) {
+    if (op == '+') return 1;
+    if (op == '.') return 2;
+    if (op == '*') return 3;
+    return 0;
+}
+// Check if a character is a operator or not.
+bool isOperator(char ch)
+{
+    return ch == '+' || ch == '.' || ch == '*';
 }
 
 //function used to print all the elements in the stack [one of the stack functions]
@@ -275,9 +299,59 @@ void validation_of_regex(char * regex)
     symbol_check(regex);
     multi_operator_check(regex);
 }
+
+// This is a function to convert the given Regex to postfix
+void Infix_to_Postfix(char *regex)
+{
+    node *stack = NULL; // stack for operator stack
+    node *Postfix_stack = NULL; // Postfix_stack for the output
+
+
+    for(int i=0; regex[i] !='\0';i++)
+    {
+        char ch = regex[i];
+        int prec = precedence(ch);
+
+        if(isalnum(ch))
+        {
+            Postfix_stack = push(Postfix_stack,ch);
+        }
+        else if(ch == '(')
+        {
+            stack = push(stack,ch);
+        }
+        else if (ch == ')')
+        {
+            while(!isEmpty(stack) && peek(stack) != '(')
+            {
+                Postfix_stack = push(Postfix_stack, peek(stack));
+                stack = pop(&stack);
+            }
+            if (!isEmpty(stack) && peek(stack) == '(') {
+                stack = pop(&stack); // Pop '(' but do not store it
+            }
+        }
+        else if(isOperator(ch))
+        {
+            while (!isEmpty(stack) && precedence(peek(stack)) >= precedence(ch))
+            {
+                Postfix_stack = push(Postfix_stack,peek(stack)); 
+                stack = pop(&stack);
+            }
+            stack = push(stack, ch);
+        }
+    }
+    while (!isEmpty(stack)) {
+        Postfix_stack = push(Postfix_stack, peek(stack));
+        stack = pop(&stack);
+    }
+    printStack(Postfix_stack);
+}
+
 int main()
 {
     char regex[] = "(a)";
     validation_of_regex(regex);
+    Infix_to_Postfix(regex);
     return 0;
 }
